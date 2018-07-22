@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 
 class CourseManager(models.Manager):
@@ -28,9 +29,27 @@ class Course(models.Model):
     def get_absolute_url(self):
         return 'courses:details', (), {'slug': self.slug}
 
-    # def get_absolute_url(self):
-    #    return r('details', slug=self.slug)
-
     class Meta:
         verbose_name = 'Curso'
         ordering = ['name']
+
+
+class Enrollment(models.Model):
+
+    STATUS_CHOICES = (
+        (0, 'Pendente'),
+        (1, 'Aprovado'),
+        (3, 'Cancelado'),
+    )
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Usuário',
+                             related_name='enrollments')
+    course = models.ForeignKey(Course, models.CASCADE, verbose_name='Curso', related_name='enrollments')
+    status = models.IntegerField('Situação', choices=STATUS_CHOICES, default=1, blank=True)
+    created_at = models.DateTimeField('Criado em', auto_now_add=True)
+    updated_at = models.DateTimeField('Atualizado em', auto_now=True)
+
+    class Meta:
+        verbose_name = 'Inscrição'
+        verbose_name_plural = 'Inscrições'
+        unique_together = (('user', 'course'),)
