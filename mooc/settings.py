@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/2.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
+import dj_database_url
 
 import os
 
@@ -25,7 +26,7 @@ SECRET_KEY = '=+$r6o^-=^vx!slmj$@#7i^_wdjx3bi-^fixv)i%35ohauzk=8'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -147,16 +148,13 @@ AUTH_USER_MODEL = 'accounts.User'
 
 
 # Heroku settings
-import dj_database_url
+
 DATABASES['default'] = dj_database_url.config()
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-# Allow all host headers
-ALLOWED_HOSTS = ['*']
 
-STATIC_ROOT = 'staticfiles'
-STATIC_URL = '/static/'
+STATIC_ROOT = 'static'
 
-STATICFILES_DIRS = (os.path.join(BASE_DIR, STATIC_URL),)
+STATICFILES_DIRS = (os.path.join(BASE_DIR, STATIC_ROOT),)
